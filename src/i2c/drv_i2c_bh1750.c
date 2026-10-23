@@ -28,7 +28,7 @@ static void BH1750_RunFrame(i2cDevice_t *dev)
         if (DRV_I2C_Begin(dev->addr, dev->busType) != 0)
             return;
 
-        DRV_I2C_Write(0, 0x10);
+        DRV_I2C_WriteBytesSingle((byte[]){0x10}, 1);
         DRV_I2C_Close();
 
         sensor->initialized = 1;
