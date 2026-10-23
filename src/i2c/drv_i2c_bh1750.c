@@ -39,7 +39,7 @@ static void BH1750_RunFrame(i2cDevice_t *dev)
     if (DRV_I2C_Begin(dev->addr, dev->busType) != 0)
         return;
 
-    DRV_I2C_ReadBytes(0, data, 2);
+    DRV_I2C_ReadRawBytes(data, 2);
     DRV_I2C_Close();
 
     int raw = ((int)data[0] << 8) | data[1];
