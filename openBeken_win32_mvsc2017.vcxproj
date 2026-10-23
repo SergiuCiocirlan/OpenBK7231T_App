@@ -424,6 +424,7 @@
     <ClCompile Include="src\i2c\drv_i2c_main.c" />
     <ClCompile Include="src\i2c\drv_i2c_mcp23017.c" />
     <ClCompile Include="src\i2c\drv_i2c_tc74.c" />
+    <ClCompile Include="src\i2c\drv_i2c_bh1750.c" />
     <ClCompile Include="src\jsmn\jsmn.c" />
     <ClCompile Include="src\libraries\IRremoteESP8266\src\IRac.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
