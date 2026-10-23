@@ -238,6 +238,7 @@ void DRV_I2C_Init()
 	DRV_I2C_LCD_PCF8574_PreInit();
 #endif
 	DRV_I2C_TC74_PreInit();
+	DRV_I2C_BH1750_PreInit();
 #if ENABLE_I2C_MCP23017
 	DRV_I2C_MCP23017_PreInit();
 #endif
