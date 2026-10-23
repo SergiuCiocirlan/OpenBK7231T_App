@@ -44,7 +44,27 @@ static void BH1750_ChannelChange(i2cDevice_t *dev, int channel, int value)
     (void)value;
 }
 
+
 void DRV_I2C_BH1750_PreInit(void)
 {
-    // Driver registration will be added in the next step.
+    // Register the BH1750 on the software I2C bus at address 0x23.
+    if (DRV_I2C_FindDeviceExt(I2C_BUS_SOFT, 0x23, I2CDEV_UNKNOWN))
+        return;
+
+    i2cDevice_BH1750_t *sensor =
+        (i2cDevice_BH1750_t *)calloc(1, sizeof(i2cDevice_BH1750_t));
+
+    if (!sensor)
+        return;
+
+    sensor->base.busType = I2C_BUS_SOFT;
+    sensor->base.addr = 0x23;
+    sensor->base.type = I2CDEV_UNKNOWN;
+    sensor->base.runFrame = BH1750_RunFrame;
+    sensor->base.channelChange = BH1750_ChannelChange;
+
+    sensor->luxChannel = -1;
+    sensor->initialized = 0;
+
+    DRV_I2C_AddNextDevice((i2cDevice_t *)sensor);
 }
