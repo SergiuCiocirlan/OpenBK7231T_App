@@ -102,6 +102,17 @@ void DRV_I2C_ReadBytes(byte addr, byte *data, int size)
 	ddev_read(i2c_hdl, (char*)data, size, (UINT32)&i2c_operater);
 #endif
 }
+
+void DRV_I2C_ReadRawBytes(byte *data, int size)
+{
+    if (current_bus == I2C_BUS_SOFT) {
+        Soft_I2C_Start(&g_softI2C, (tg_addr << 1) + 1);
+        Soft_I2C_ReadBytes(&g_softI2C, data, size);
+        Soft_I2C_Stop(&g_softI2C);
+        return;
+    }
+}
+
 int DRV_I2C_Begin(int dev_adr, int busID) {
 
 #if PLATFORM_BK7231T
