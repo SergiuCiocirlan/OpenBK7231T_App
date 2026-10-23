@@ -8,23 +8,25 @@ typedef struct {
     int initialized;
 } i2cDevice_BH1750_t;
 
+
 static void BH1750_RunFrame(i2cDevice_t *dev)
 {
     i2cDevice_BH1750_t *sensor = (i2cDevice_BH1750_t *)dev;
     byte data[2];
 
-    if (DRV_I2C_Begin(dev->addr, dev->busType) != 0)
-        return;
-
-    // Start continuous high-resolution measurement.
-    DRV_I2C_Write(0, 0x10);
-    DRV_I2C_Close();
-
+    // First frame: start continuous high-resolution measurement.
     if (!sensor->initialized) {
+        if (DRV_I2C_Begin(dev->addr, dev->busType) != 0)
+            return;
+
+        DRV_I2C_Write(0, 0x10);
+        DRV_I2C_Close();
+
         sensor->initialized = 1;
         return;
     }
 
+    // Subsequent frames: read the latest measurement.
     if (DRV_I2C_Begin(dev->addr, dev->busType) != 0)
         return;
 
@@ -36,6 +38,7 @@ static void BH1750_RunFrame(i2cDevice_t *dev)
 
     CHANNEL_Set(sensor->luxChannel, lux, 0);
 }
+
 
 static void BH1750_ChannelChange(i2cDevice_t *dev, int channel, int value)
 {
