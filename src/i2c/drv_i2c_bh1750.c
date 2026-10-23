@@ -45,26 +45,59 @@ static void BH1750_ChannelChange(i2cDevice_t *dev, int channel, int value)
 }
 
 
+
 void DRV_I2C_BH1750_PreInit(void)
 {
-    // Register the BH1750 on the software I2C bus at address 0x23.
-    if (DRV_I2C_FindDeviceExt(I2C_BUS_SOFT, 0x23, I2CDEV_UNKNOWN))
-        return;
+    //cmddetail:{"name":"addI2CDevice_BH1750","args":"[Soft/I2C1/I2C2] [address] [targetChannel]",
+    //cmddetail:"descr":"Adds a BH1750 ambient light sensor",
+    //cmddetail:"fn":"BH1750_AddDevice","file":"i2c/drv_i2c_bh1750.c","requires":"",
+    //cmddetail:"examples":"addI2CDevice_BH1750 Soft 35 1"}
+    CMD_RegisterCommand("addI2CDevice_BH1750", BH1750_AddDevice, NULL);
+}
 
+
+
+static void BH1750_AddDeviceInternal(int busType, int address, int targetChannel)
+{
     i2cDevice_BH1750_t *sensor =
         (i2cDevice_BH1750_t *)calloc(1, sizeof(i2cDevice_BH1750_t));
 
     if (!sensor)
         return;
 
-    sensor->base.busType = I2C_BUS_SOFT;
-    sensor->base.addr = 0x23;
+    sensor->base.addr = address;
+    sensor->base.busType = busType;
     sensor->base.type = I2CDEV_UNKNOWN;
+    sensor->base.next = 0;
     sensor->base.runFrame = BH1750_RunFrame;
     sensor->base.channelChange = BH1750_ChannelChange;
-
-    sensor->luxChannel = -1;
+    sensor->luxChannel = targetChannel;
     sensor->initialized = 0;
 
     DRV_I2C_AddNextDevice((i2cDevice_t *)sensor);
+}
+
+static commandResult_t BH1750_AddDevice(const void *context,
+    const char *cmd, const char *args, int cmdFlags)
+{
+    const char *busName;
+    int address;
+    int targetChannel;
+    i2cBusType_t busType;
+
+    Tokenizer_TokenizeString(args, 0);
+    busName = Tokenizer_GetArg(0);
+    address = Tokenizer_GetArgInteger(1);
+    targetChannel = Tokenizer_GetArgInteger(2);
+
+    busType = DRV_I2C_ParseBusType(busName);
+
+    if (busType == I2C_BUS_ERROR || address < 0x03 || address > 0x77)
+        return CMD_RES_BAD_ARGUMENT;
+
+    if (DRV_I2C_FindDevice(busType, address))
+        return CMD_RES_BAD_ARGUMENT;
+
+    BH1750_AddDeviceInternal(busType, address, targetChannel);
+    return CMD_RES_OK;
 }
