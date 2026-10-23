@@ -9,6 +9,15 @@ typedef struct {
 } i2cDevice_BH1750_t;
 
 
+static void BH1750_AddDeviceInternal(int busType, int address, int targetChannel);
+
+static commandResult_t BH1750_AddDevice(
+    const void *context,
+    const char *cmd,
+    const char *args,
+    int cmdFlags
+);
+
 static void BH1750_RunFrame(i2cDevice_t *dev)
 {
     i2cDevice_BH1750_t *sensor = (i2cDevice_BH1750_t *)dev;
