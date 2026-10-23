@@ -48,6 +48,8 @@ void DRV_I2C_MCP23017_PreInit();
 // drv_i2c_tc74.c
 void DRV_I2C_TC74_PreInit();
 
+void DRV_I2C_BH1750_PreInit();
+
 // drv_i2c_lcd_pcf8574t.c
 void DRV_I2C_LCD_PCF8574_PreInit();
 
