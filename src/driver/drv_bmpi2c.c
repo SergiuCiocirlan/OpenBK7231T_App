@@ -140,7 +140,8 @@ void BMPI2C_Init()
 	}
 	isConfigured = false;
 
-	Soft_I2C_PreInit(&g_softI2C);
+	bool i2cReady = Soft_I2C_PreInit(&g_softI2C);
+	ADDLOG_INFO(LOG_FEATURE_SENSOR, "BMPI2C I2C idle check: %s",i2cReady ? "PASS" : "FAIL");
 
 	ADDLOG_INFO(LOG_FEATURE_SENSOR, "BMPI2C pins: SCL=%d SDA=%d", g_softI2C.pin_clk, g_softI2C.pin_data);
 
