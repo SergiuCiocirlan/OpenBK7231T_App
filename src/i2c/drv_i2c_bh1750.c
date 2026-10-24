@@ -108,11 +108,18 @@ static commandResult_t BH1750_AddDevice(const void *context,
 
     busType = DRV_I2C_ParseBusType(busName);
 
-    if (busType == I2C_BUS_ERROR || address < 0x03 || address > 0x77)
-        return CMD_RES_BAD_ARGUMENT;
-
-    if (DRV_I2C_FindDevice(busType, address))
-        return CMD_RES_BAD_ARGUMENT;
+    if (busType == I2C_BUS_ERROR) {
+    ADDLOG_INFO(LOG_FEATURE_I2C, "BH1750: invalid bus '%s'", busName);
+    return CMD_RES_BAD_ARGUMENT;
+}
+if (address < 0x03 || address > 0x77) {
+    ADDLOG_INFO(LOG_FEATURE_I2C, "BH1750: invalid address %d", address);
+    return CMD_RES_BAD_ARGUMENT;
+}
+if (DRV_I2C_FindDevice(busType, address)) {
+    ADDLOG_INFO(LOG_FEATURE_I2C, "BH1750: device already registered at bus %d address %d", busType, address);
+    return CMD_RES_BAD_ARGUMENT;
+}
 
     BH1750_AddDeviceInternal(busType, address, targetChannel);
     return CMD_RES_OK;
