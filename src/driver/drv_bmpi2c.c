@@ -142,6 +142,10 @@ void BMPI2C_Init()
 
 	Soft_I2C_PreInit(&g_softI2C);
 
+	ADDLOG_INFO(LOG_FEATURE_SENSOR, "BMPI2C pins: SCL=%d SDA=%d", g_softI2C.pin_clk, g_softI2C.pin_data);
+
+	ADDLOG_INFO(LOG_FEATURE_SENSOR, "BMPI2C idle levels: SCL=%d SDA=%d", HAL_PIN_ReadDigitalInput(g_softI2C.pin_clk), HAL_PIN_ReadDigitalInput(g_softI2C.pin_data));
+
 	usleep(100);
 
 	if(BMP_BasicInit())
