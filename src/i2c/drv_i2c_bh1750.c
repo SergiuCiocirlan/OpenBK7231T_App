@@ -1,5 +1,8 @@
-
 #include "../new_common.h"
+#include "../new_pins.h"
+#include "../new_cfg.h"
+#include "../cmnds/cmd_public.h"
+#include "../logging/logging.h"
 #include "drv_i2c_local.h"
 
 typedef struct {
