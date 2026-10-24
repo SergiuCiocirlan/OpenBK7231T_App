@@ -81,6 +81,7 @@ bool Soft_I2C_WriteByte(softI2C_t *i2c, uint8_t value) {
 	Soft_I2C_SetHigh(i2c->pin_clk);
 	usleep(g_clk_period / 2);
 	ack = HAL_PIN_ReadDigitalInput(i2c->pin_data);
+	ADDLOG_INFO(LOG_FEATURE_SENSOR, "Soft I2C ACK sample: SDA=%d, SCL pin=%d", ack, i2c->pin_clk);
 	Soft_I2C_SetLow(i2c->pin_clk);
 	usleep(g_clk_period / 2);
 	Soft_I2C_SetLow(i2c->pin_data);
