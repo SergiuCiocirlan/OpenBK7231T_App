@@ -237,7 +237,8 @@ void BMP_Write8(uint8_t reg_addr, uint8_t _data)
 
 uint8_t BMP_Read8(uint8_t reg_addr)
 {
-	Soft_I2C_Start(&g_softI2C, g_softI2C.address8bit);
+	bool addrAck = Soft_I2C_Start(&g_softI2C, g_softI2C.address8bit);
+	ADDLOG_INFO(LOG_FEATURE_SENSOR, "BMPI2C device ACK: %s (addr=0x%02X)", addrAck ? "YES" : "NO", g_softI2C.address8bit);
 	Soft_I2C_WriteByte(&g_softI2C, reg_addr);
 	Soft_I2C_Stop(&g_softI2C);
 	Soft_I2C_Start(&g_softI2C, g_softI2C.address8bit | 1);
